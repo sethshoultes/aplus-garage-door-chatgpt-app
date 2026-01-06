@@ -94,29 +94,6 @@
     </style>
 </head>
 <body class="dark">
-    <!-- API Key Modal -->
-    <div id="apiKeyModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-        <div class="bg-[#202123] rounded-lg p-6 max-w-md w-full mx-4 border border-[#565869]">
-            <h2 class="text-2xl font-semibold text-white mb-4">Enter OpenAI API Key</h2>
-            <p class="text-[#ececf1] text-sm mb-4">This demo uses the OpenAI API to provide a realistic ChatGPT experience.</p>
-            <input
-                type="password"
-                id="apiKeyInput"
-                placeholder="sk-..."
-                class="w-full px-4 py-3 bg-[#40414f] border border-[#565869] rounded-lg mb-4 text-white focus:outline-none focus:border-[#10a37f]"
-            />
-            <button
-                onclick="saveApiKey()"
-                class="w-full bg-[#10a37f] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#1a7f64] transition"
-            >
-                Start Demo
-            </button>
-            <p class="text-xs text-[#8e8ea0] mt-4 text-center">
-                Stored locally in your browser only
-            </p>
-        </div>
-    </div>
-
     <!-- Main ChatGPT Interface -->
     <div class="flex flex-col h-screen max-w-4xl mx-auto">
         <!-- Header -->
@@ -184,63 +161,11 @@
     </div>
 
     <script>
-        let apiKey = '';
-        const SERVER_URL = 'http://localhost:3456';
+        const SERVER_URL = window.location.origin;
         const conversationHistory = [];
 
-        async function saveApiKey() {
-            apiKey = document.getElementById('apiKeyInput').value.trim();
-            if (!apiKey.startsWith('sk-')) {
-                alert('Please enter a valid OpenAI API key starting with sk-');
-                return;
-            }
-
-            // Test the API key
-            const testBtn = document.querySelector('#apiKeyModal button');
-            testBtn.textContent = 'Testing API key...';
-            testBtn.disabled = true;
-
-            try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
-                    },
-                    body: JSON.stringify({
-                        model: 'gpt-3.5-turbo',
-                        messages: [{ role: 'user', content: 'test' }],
-                        max_tokens: 5
-                    })
-                });
-
-                const data = await response.json();
-
-                if (data.error) {
-                    alert(`API Key Error: ${data.error.message}\n\nPlease check your API key and try again.`);
-                    testBtn.textContent = 'Start Demo';
-                    testBtn.disabled = false;
-                    return;
-                }
-
-                // Success!
-                localStorage.setItem('openai_api_key', apiKey);
-                document.getElementById('apiKeyModal').style.display = 'none';
-                initializeChat();
-            } catch (error) {
-                alert(`Error testing API key: ${error.message}`);
-                testBtn.textContent = 'Start Demo';
-                testBtn.disabled = false;
-            }
-        }
-
         window.onload = function() {
-            const stored = localStorage.getItem('openai_api_key');
-            if (stored) {
-                apiKey = stored;
-                document.getElementById('apiKeyModal').style.display = 'none';
-                initializeChat();
-            }
+            initializeChat();
         };
 
         function initializeChat() {
@@ -533,11 +458,10 @@ IMPORTANT FORMATTING RULES:
                     tools: requestBody.tools.length
                 });
 
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch(`${SERVER_URL}/api/chat`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(requestBody)
                 });
@@ -646,11 +570,10 @@ IMPORTANT FORMATTING RULES:
 
                         console.log('Follow-up request:', followUpBody);
 
-                        const followUpResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                        const followUpResponse = await fetch(`${SERVER_URL}/api/chat`, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${apiKey}`
+                                'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(followUpBody)
                         });
