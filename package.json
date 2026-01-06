@@ -1,0 +1,55 @@
+{
+  "name": "aplus-garage-door-chatgpt-app",
+  "version": "1.0.0",
+  "description": "ChatGPT app for A Plus Garage Door emergency service and booking",
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:widgets\"",
+    "dev:server": "tsx watch src/server.ts",
+    "dev:widgets": "cd src/widgets && vite",
+    "build": "npm run build:server && npm run build:widgets",
+    "build:server": "tsc",
+    "build:widgets": "cd src/widgets && vite build",
+    "vercel-build": "npm run build",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "keywords": [
+    "chatgpt",
+    "mcp",
+    "garage-door",
+    "service",
+    "openai"
+  ],
+  "author": "A Plus Garage Door",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "zod": "^3.23.8",
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/express": "^5.0.0",
+    "@types/cors": "^2.8.17",
+    "typescript": "^5.7.2",
+    "tsx": "^4.19.2",
+    "concurrently": "^9.1.2",
+    "vite": "^6.0.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "lucide-react": "^0.468.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

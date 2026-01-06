@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Plus Garage Door - ChatGPT App Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .widget-preview {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            background: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">A Plus Garage Door</h1>
+            <p class="text-xl text-gray-600">ChatGPT App - Visual Demo</p>
+            <p class="text-sm text-gray-500 mt-2">These are the interactive cards users see in ChatGPT</p>
+        </header>
+
+        <!-- Service Area Result Widget -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">1️⃣ Service Area Confirmation</h2>
+            <p class="text-gray-600 mb-4">When a user asks: <em>"Do you service Henderson?"</em></p>
+
+            <div class="widget-preview max-w-md">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900">We service Henderson!</p>
+                        <p class="text-sm text-gray-600">Nevada • 24/7 emergency service available</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                    <p class="text-sm text-gray-700">
+                        A Plus Garage Doors has been serving Henderson with same-day service and expert technicians.
+                    </p>
+                </div>
+
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 transition">
+                        📞 Call Now
+                    </button>
+                    <button class="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-800 transition">
+                        📅 Book Online
+                    </button>
+                </div>
+
+                <p class="text-xs text-center text-gray-500 mt-2">(702) 297-7811</p>
+            </div>
+        </section>
+
+        <!-- Diagnosis Result Widget -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">2️⃣ Smart Diagnosis</h2>
+            <p class="text-gray-600 mb-4">When a user says: <em>"My door won't close and makes a loud grinding noise"</em></p>
+
+            <div class="widget-preview max-w-md">
+                <!-- Urgency Banner -->
+                <div class="bg-red-100 rounded-lg p-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-red-600 text-xl">🚨</span>
+                        <span class="font-semibold text-red-800">Emergency Service Recommended</span>
+                    </div>
+                </div>
+
+                <!-- Likely Issues -->
+                <div class="mb-4">
+                    <h3 class="text-sm font-medium text-gray-500 mb-2">LIKELY ISSUES</h3>
+                    <div class="p-3 bg-gray-50 rounded-lg mb-2">
+                        <p class="font-medium text-gray-900">Safety Sensor Issue</p>
+                        <p class="text-sm text-gray-600">Photo-eye sensors misaligned or malfunctioning</p>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-medium text-gray-900">Broken Spring</p>
+                        <p class="text-sm text-gray-600">Torsion or extension spring has snapped</p>
+                    </div>
+                </div>
+
+                <!-- Safety Warning -->
+                <div class="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+                    <div class="flex gap-2">
+                        <span class="text-red-600">⚠️</span>
+                        <p class="text-sm text-red-800">Do not attempt to operate door. Springs under extreme tension.</p>
+                    </div>
+                </div>
+
+                <!-- Estimated Cost -->
+                <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Estimated cost range</span>
+                        <span class="font-semibold text-gray-900">$50 - $350</span>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-green-700">🏷️ Tune-Up Special</span>
+                            <span class="font-semibold text-green-700">$49</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button class="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-red-700">
+                        🚨 Emergency Service
+                    </button>
+                    <button class="flex-1 bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800">
+                        📅 Schedule Repair
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Appointment Confirmation Widget -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">3️⃣ Appointment Confirmation</h2>
+            <p class="text-gray-600 mb-4">After booking: <em>"I need emergency service now"</em></p>
+
+            <div class="widget-preview max-w-md">
+                <!-- Success Header -->
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900 text-lg">Appointment Confirmed!</p>
+                        <p class="text-sm text-gray-600">Confirmation #APL-2026-79416</p>
+                    </div>
+                </div>
+
+                <!-- Appointment Details -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4 space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Service</span>
+                        <span class="font-medium text-gray-900">Emergency Repair</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Date</span>
+                        <span class="font-medium text-gray-900">Today</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Time Window</span>
+                        <span class="font-medium text-gray-900">Next available (1-2 hours)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Address</span>
+                        <span class="font-medium text-gray-900 text-right">Las Vegas, NV</span>
+                    </div>
+                </div>
+
+                <!-- Promotion Applied -->
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-green-600">🏷️</span>
+                        <div>
+                            <p class="text-sm font-medium text-green-800">Promotion Applied</p>
+                            <p class="text-sm text-green-700">Spring Special: $75 OFF</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- What's Next -->
+                <div class="bg-blue-50 rounded-lg p-3 mb-4">
+                    <p class="text-sm text-blue-800">
+                        <strong>What's next:</strong> You'll receive a text message when your technician is on the way with their photo and live ETA.
+                    </p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-2">
+                    <button class="flex-1 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50">
+                        Modify
+                    </button>
+                    <button class="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-800">
+                        📞 Questions? Call
+                    </button>
+                </div>
+
+                <p class="text-xs text-gray-500 text-center mt-3">
+                    Free cancellation up to 2 hours before appointment
+                </p>
+            </div>
+        </section>
+
+        <!-- Promotions Widget -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">4️⃣ Current Promotions</h2>
+            <p class="text-gray-600 mb-4">When a user asks: <em>"What deals do you have?"</em></p>
+
+            <div class="widget-preview">
+                <!-- Promo Banner -->
+                <div class="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-semibold text-lg">Active Promotions</p>
+                            <p class="text-sm text-red-100">Save $30 - $200 on service</p>
+                        </div>
+                        <span class="text-3xl">🏷️</span>
+                    </div>
+                </div>
+
+                <!-- Promotion Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
+                        <h3 class="font-semibold text-gray-900 mb-1">Broken Spring Special</h3>
+                        <p class="text-sm text-gray-600 mb-2">$75 OFF 2 Springs / $30 OFF 1</p>
+                        <p class="text-xs text-gray-500">Springs are your door's backbone—replace them now!</p>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
+                        <h3 class="font-semibold text-gray-900 mb-1">New Door Savings</h3>
+                        <p class="text-sm text-gray-600 mb-2">$200 OFF Any New Garage Door</p>
+                        <p class="text-xs text-gray-500">Boost curb appeal and recoup up to 194% at resale</p>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
+                        <h3 class="font-semibold text-gray-900 mb-1">Safety & Maintenance</h3>
+                        <p class="text-sm text-gray-600 mb-2">$49 (Reg. $89)</p>
+                        <p class="text-xs text-gray-500">24-Point Safety Inspection + Lube & Tune</p>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition">
+                        <h3 class="font-semibold text-gray-900 mb-1">Garage Motor Special</h3>
+                        <p class="text-sm text-gray-600 mb-2">$100 OFF LiftMaster Elite</p>
+                        <p class="text-xs text-gray-500">Smart features with MyQ app and ultra-quiet motor</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-12 pt-8 border-t border-gray-200">
+            <div class="text-center">
+                <p class="text-gray-600 mb-2">
+                    <strong>Server Status:</strong>
+                    <span class="text-green-600">● Online</span> at
+                    <a href="http://localhost:3456/health" class="text-blue-600 hover:underline" target="_blank">
+                        http://localhost:3456
+                    </a>
+                </p>
+                <p class="text-sm text-gray-500">
+                    These widgets appear inside ChatGPT conversations with 800M+ users
+                </p>
+                <div class="mt-4 flex gap-4 justify-center text-sm">
+                    <span class="text-gray-600">📞 Nevada: (702) 297-7811</span>
+                    <span class="text-gray-600">📞 Utah: (801) 683-6222</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

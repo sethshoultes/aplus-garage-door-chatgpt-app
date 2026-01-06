@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "widgets/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/widgets/(.*)",
+      "dest": "/widgets/dist/$1"
+    },
+    {
+      "src": "/test-tool",
+      "dest": "/src/server.ts"
+    },
+    {
+      "src": "/(.*\\.(html|js|css))",
+      "dest": "/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/src/server.ts"
+    }
+  ],
+  "env": {
+    "USE_MOCK_API": "true",
+    "PHONE_NEVADA": "(702) 297-7811",
+    "PHONE_UTAH": "(801) 683-6222",
+    "WIDGET_BASE_URL": "https://garage-door-chatgpt-app.vercel.app/widgets"
+  }
+}

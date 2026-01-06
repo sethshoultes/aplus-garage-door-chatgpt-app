@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT - A Plus Garage Door Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #343541;
+        }
+        .message { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+            padding: 12px 16px;
+        }
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #8e8ea0;
+            animation: typing 1.4s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
+        .widget-card {
+            background: #444654;
+            border: 1px solid #565869;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            max-width: 500px;
+        }
+        .chatgpt-logo {
+            width: 30px;
+            height: 30px;
+            background: #10a37f;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            background: #5436da;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .regenerate-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid #565869;
+            border-radius: 6px;
+            color: #ececf1;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .regenerate-btn:hover {
+            background: #40414f;
+        }
+        input::placeholder {
+            color: #8e8ea0;
+        }
+    </style>
+</head>
+<body class="dark">
+    <!-- API Key Modal -->
+    <div id="apiKeyModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+        <div class="bg-[#202123] rounded-lg p-6 max-w-md w-full mx-4 border border-[#565869]">
+            <h2 class="text-2xl font-semibold text-white mb-4">Enter OpenAI API Key</h2>
+            <p class="text-[#ececf1] text-sm mb-4">This demo uses the OpenAI API to provide a realistic ChatGPT experience.</p>
+            <input
+                type="password"
+                id="apiKeyInput"
+                placeholder="sk-..."
+                class="w-full px-4 py-3 bg-[#40414f] border border-[#565869] rounded-lg mb-4 text-white focus:outline-none focus:border-[#10a37f]"
+            />
+            <button
+                onclick="saveApiKey()"
+                class="w-full bg-[#10a37f] text-white py-3 px-4 rounded-lg font-medium hover:bg-[#1a7f64] transition"
+            >
+                Start Demo
+            </button>
+            <p class="text-xs text-[#8e8ea0] mt-4 text-center">
+                Stored locally in your browser only
+            </p>
+        </div>
+    </div>
+
+    <!-- Main ChatGPT Interface -->
+    <div class="flex flex-col h-screen max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="bg-[#343541] border-b border-[#565869] px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="chatgpt-logo">
+                    <svg width="20" height="20" viewBox="0 0 41 41" fill="none">
+                        <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-white font-medium text-sm">ChatGPT</h1>
+                    <p class="text-[#8e8ea0] text-xs">Using A Plus Garage Door</p>
+                </div>
+            </div>
+            <button onclick="clearChat()" class="text-[#ececf1] hover:text-white text-sm px-3 py-1.5 hover:bg-[#40414f] rounded transition">
+                New chat
+            </button>
+        </header>
+
+        <!-- Messages Area -->
+        <div id="messages" class="flex-1 overflow-y-auto">
+            <!-- Welcome message will be added here -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="bg-[#343541] border-t border-[#565869] px-4 py-4">
+            <div class="max-w-3xl mx-auto">
+                <!-- Quick Action Buttons -->
+                <div id="quickActions" class="flex flex-wrap gap-2 mb-3">
+                    <button onclick="sendQuickMessage('My garage door won\'t close')" class="px-3 py-2 bg-[#40414f] hover:bg-[#565869] text-[#ececf1] text-sm rounded-lg border border-[#565869] transition">
+                        My garage door won't close
+                    </button>
+                    <button onclick="sendQuickMessage('I live in Salt Lake City, my door makes noise')" class="px-3 py-2 bg-[#40414f] hover:bg-[#565869] text-[#ececf1] text-sm rounded-lg border border-[#565869] transition">
+                        Door makes noise - Salt Lake City
+                    </button>
+                    <button onclick="sendQuickMessage('I need emergency service in Henderson')" class="px-3 py-2 bg-[#40414f] hover:bg-[#565869] text-[#ececf1] text-sm rounded-lg border border-[#565869] transition">
+                        Emergency service - Henderson
+                    </button>
+                </div>
+
+                <div class="flex gap-3 bg-[#40414f] rounded-lg border border-[#565869] focus-within:border-[#10a37f] transition">
+                    <input
+                        type="text"
+                        id="userInput"
+                        placeholder="Message ChatGPT..."
+                        class="flex-1 px-4 py-3 bg-transparent text-white focus:outline-none"
+                        onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"
+                    />
+                    <button
+                        onclick="sendMessage()"
+                        id="sendButton"
+                        class="px-4 text-[#8e8ea0] hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M7 11L12 6L17 11M12 18V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-center text-xs text-[#8e8ea0] mt-2">
+                    ChatGPT can make mistakes. Consider checking important information.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apiKey = '';
+        const SERVER_URL = 'http://localhost:3456';
+        const conversationHistory = [];
+
+        async function saveApiKey() {
+            apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (!apiKey.startsWith('sk-')) {
+                alert('Please enter a valid OpenAI API key starting with sk-');
+                return;
+            }
+
+            // Test the API key
+            const testBtn = document.querySelector('#apiKeyModal button');
+            testBtn.textContent = 'Testing API key...';
+            testBtn.disabled = true;
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [{ role: 'user', content: 'test' }],
+                        max_tokens: 5
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(`API Key Error: ${data.error.message}\n\nPlease check your API key and try again.`);
+                    testBtn.textContent = 'Start Demo';
+                    testBtn.disabled = false;
+                    return;
+                }
+
+                // Success!
+                localStorage.setItem('openai_api_key', apiKey);
+                document.getElementById('apiKeyModal').style.display = 'none';
+                initializeChat();
+            } catch (error) {
+                alert(`Error testing API key: ${error.message}`);
+                testBtn.textContent = 'Start Demo';
+                testBtn.disabled = false;
+            }
+        }
+
+        window.onload = function() {
+            const stored = localStorage.getItem('openai_api_key');
+            if (stored) {
+                apiKey = stored;
+                document.getElementById('apiKeyModal').style.display = 'none';
+                initializeChat();
+            }
+        };
+
+        function initializeChat() {
+            addWelcomeMessage();
+        }
+
+        function addWelcomeMessage() {
+            const welcomeHTML = `
+                <div class="message">
+                    <div class="flex gap-4 p-6 max-w-3xl mx-auto">
+                        <div class="chatgpt-logo">
+                            <svg width="20" height="20" viewBox="0 0 41 41" fill="none">
+                                <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 text-[#ececf1] space-y-3">
+                            <p>Hi! I'm ChatGPT with access to A Plus Garage Door services. I can help you with garage door issues across Nevada and Utah.</p>
+                            <p class="text-sm text-[#8e8ea0]">Click a quick action button below or type your own message to get started.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('messages').innerHTML = welcomeHTML;
+        }
+
+        function sendQuickMessage(message) {
+            document.getElementById('userInput').value = message;
+            sendMessage();
+        }
+
+        function addMessage(role, content, isWidget = false, widgetData = null) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+
+            if (role === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="flex gap-4 p-6 bg-[#444654] max-w-3xl mx-auto">
+                        <div class="user-avatar">U</div>
+                        <div class="flex-1 text-[#ececf1]">
+                            ${content}
+                        </div>
+                    </div>
+                `;
+            } else {
+                const widgetHTML = isWidget && widgetData ? generateWidgetHTML(widgetData) : '';
+                messageDiv.innerHTML = `
+                    <div class="flex gap-4 p-6 max-w-3xl mx-auto">
+                        <div class="chatgpt-logo">
+                            <svg width="20" height="20" viewBox="0 0 41 41" fill="none">
+                                <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 text-[#ececf1] space-y-3">
+                            ${content}
+                            ${widgetHTML}
+                        </div>
+                    </div>
+                `;
+            }
+
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showTyping() {
+            const messagesDiv = document.getElementById('messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing';
+            typingDiv.innerHTML = `
+                <div class="flex gap-4 p-6 max-w-3xl mx-auto">
+                    <div class="chatgpt-logo">
+                        <svg width="20" height="20" viewBox="0 0 41 41" fill="none">
+                            <path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="typing-indicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function removeTyping() {
+            const typing = document.getElementById('typing');
+            if (typing) typing.remove();
+        }
+
+        function generateWidgetHTML(data) {
+            const { toolName, toolData } = data;
+            let html = '<div class="widget-card mt-4">';
+
+            if (toolName === 'check_service_area') {
+                if (toolData.is_covered) {
+                    html += `
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-green-600 bg-opacity-20 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-white">✅ We service ${toolData.service_area_name}!</p>
+                                <p class="text-sm text-[#8e8ea0]">${toolData.state} • 24/7 Emergency Service</p>
+                            </div>
+                        </div>
+                        <div class="bg-[#343541] rounded-lg p-3 mb-3">
+                            <p class="text-sm text-[#ececf1]">Contact: <span class="text-[#10a37f] font-medium">${toolData.phone}</span></p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="flex-1 bg-[#10a37f] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#1a7f64] transition">
+                                Call Now
+                            </button>
+                            <button class="flex-1 bg-[#565869] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#676879] transition">
+                                Book Service
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-yellow-600 bg-opacity-20 rounded-full flex items-center justify-center">⚠️</div>
+                            <div>
+                                <p class="font-semibold text-white">Outside service area</p>
+                                <p class="text-sm text-[#8e8ea0]">Nearest: ${toolData.nearest_coverage}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else if (toolName === 'diagnose_issue') {
+                const urgencyConfig = {
+                    emergency: { bg: 'bg-red-600', text: 'Emergency', icon: '🚨' },
+                    soon: { bg: 'bg-yellow-600', text: 'Service Soon', icon: '⚡' },
+                    routine: { bg: 'bg-blue-600', text: 'Routine', icon: 'ℹ️' }
+                };
+                const config = urgencyConfig[toolData.urgency];
+
+                html += `
+                    <div class="${config.bg} bg-opacity-20 border border-${toolData.urgency === 'emergency' ? 'red' : toolData.urgency === 'soon' ? 'yellow' : 'blue'}-600 border-opacity-30 rounded-lg p-3 mb-4">
+                        <p class="text-white font-semibold">${config.icon} ${config.text}</p>
+                    </div>
+                    <div class="space-y-2 mb-4">
+                        <p class="text-sm text-[#8e8ea0] uppercase tracking-wide">Likely Issues</p>
+                        ${toolData.likely_issues.map(issue => `
+                            <div class="bg-[#343541] rounded-lg p-3">
+                                <p class="font-medium text-white text-sm">${issue.name}</p>
+                                <p class="text-xs text-[#8e8ea0] mt-1">${issue.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${toolData.safety_warning ? `
+                        <div class="bg-red-600 bg-opacity-20 border border-red-600 border-opacity-30 rounded-lg p-3 mb-4">
+                            <p class="text-sm text-red-400">⚠️ ${toolData.safety_warning}</p>
+                        </div>
+                    ` : ''}
+                    <div class="bg-[#343541] rounded-lg p-3 mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm text-[#8e8ea0]">Estimated Cost</span>
+                            <span class="text-white font-semibold">$${toolData.estimated_cost_range.min} - $${toolData.estimated_cost_range.max}</span>
+                        </div>
+                        ${toolData.applicable_promotion ? `
+                            <div class="pt-2 border-t border-[#565869]">
+                                <p class="text-sm text-green-400">🏷️ Promotion available</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <button class="w-full ${toolData.urgency === 'emergency' ? 'bg-red-600 hover:bg-red-700' : 'bg-[#10a37f] hover:bg-[#1a7f64]'} text-white py-2.5 px-4 rounded-lg font-medium transition">
+                        ${toolData.urgency === 'emergency' ? '🚨 Get Emergency Service' : '📅 Schedule Service'}
+                    </button>
+                `;
+            } else if (toolName === 'create_service_request') {
+                const serviceTypeFormatted = toolData.service_type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+                html += `
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 bg-green-600 bg-opacity-20 rounded-full flex items-center justify-center">
+                            <svg class="w-7 h-7 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-white font-semibold text-lg">Appointment Confirmed!</p>
+                            <p class="text-sm text-green-400">Confirmation #${toolData.confirmation_number}</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#343541] rounded-lg p-4 space-y-2.5 mb-4">
+                        <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm">
+                            <div>
+                                <p class="text-[#8e8ea0] text-xs mb-0.5">Service</p>
+                                <p class="text-white font-medium">${serviceTypeFormatted}</p>
+                            </div>
+                            <div>
+                                <p class="text-[#8e8ea0] text-xs mb-0.5">Time</p>
+                                <p class="text-white font-medium">${toolData.time_window || 'Next available (1-2 hours)'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[#8e8ea0] text-xs mb-0.5">Customer</p>
+                                <p class="text-white font-medium">${toolData.customer_name || 'Customer'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[#8e8ea0] text-xs mb-0.5">Phone</p>
+                                <p class="text-[#10a37f] font-medium">${toolData.contact_phone}</p>
+                            </div>
+                        </div>
+                        ${toolData.address ? `
+                            <div class="pt-2.5 border-t border-[#565869]">
+                                <p class="text-[#8e8ea0] text-xs mb-0.5">Service Address</p>
+                                <p class="text-white text-sm">${toolData.address}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    ${toolData.promotion_applied ? `
+                        <div class="bg-green-600 bg-opacity-20 border border-green-600 border-opacity-30 rounded-lg p-3 mb-4">
+                            <p class="text-sm text-green-400">🏷️ ${toolData.promotion_applied.discount} applied!</p>
+                        </div>
+                    ` : ''}
+
+                    <div class="bg-[#40414f] rounded-lg p-3.5 border-l-3 border-blue-500">
+                        <p class="text-sm font-semibold text-blue-400 mb-1.5">What's Next?</p>
+                        <p class="text-sm text-[#ececf1] leading-relaxed">
+                            You'll receive a text when your technician is on the way with live ETA.
+                        </p>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            input.disabled = true;
+            document.getElementById('sendButton').disabled = true;
+
+            // Hide quick actions after first message
+            const quickActions = document.getElementById('quickActions');
+            if (quickActions) {
+                quickActions.style.display = 'none';
+            }
+
+            addMessage('user', message);
+            input.value = '';
+
+            conversationHistory.push({
+                role: 'user',
+                content: message
+            });
+
+            showTyping();
+
+            try {
+                const systemMessage = {
+                    role: 'system',
+                    content: `You are ChatGPT with access to A Plus Garage Door services. You help customers with garage door issues across Nevada and Utah.
+
+When users mention garage door problems:
+1. Ask clarifying questions if needed (symptoms, location)
+2. Use check_service_area to verify coverage
+3. Use diagnose_issue to analyze the problem
+4. Suggest appropriate service and use create_service_request if they want to book
+
+IMPORTANT FORMATTING RULES:
+- Keep responses SHORT and conversational (2-3 sentences max when showing a widget)
+- The widget displays all the details, so DON'T repeat information that's shown in the widget
+- Use natural language, avoid asterisks, dashes, and excessive formatting
+- When booking is confirmed, say something brief like "Great! I've scheduled your appointment. Check the details below."
+- Be professional, friendly, and caring about their safety`
+                };
+
+                const requestBody = {
+                    model: 'gpt-3.5-turbo',
+                    messages: [systemMessage, ...conversationHistory],
+                    tools: await getToolDefinitions(),
+                    tool_choice: 'auto'
+                };
+
+                console.log('Sending request to OpenAI:', {
+                    messageCount: requestBody.messages.length,
+                    messages: requestBody.messages,
+                    tools: requestBody.tools.length
+                });
+
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                // Log the full response for debugging
+                console.log('OpenAI API Response Status:', response.status);
+                console.log('OpenAI API Response Headers:', Object.fromEntries(response.headers.entries()));
+
+                const data = await response.json();
+                console.log('OpenAI API Response Data:', data);
+
+                removeTyping();
+
+                if (data.error) {
+                    console.error('OpenAI API Error:', data.error);
+                    const errorMessage = `❌ API Error: ${data.error.message}
+
+**Error Type:** ${data.error.type || 'unknown'}
+**Error Code:** ${data.error.code || 'N/A'}
+
+**Possible Causes:**
+• Invalid or expired API key
+• Insufficient credits on your OpenAI account
+• API key doesn't have access to chat completions
+• Rate limit exceeded
+
+**Next Steps:**
+1. Check your API key at platform.openai.com/api-keys
+2. Verify billing at platform.openai.com/account/billing
+3. Try generating a new API key
+
+**Full Error Details:**
+\`\`\`json
+${JSON.stringify(data.error, null, 2)}
+\`\`\``;
+                    addMessage('assistant', errorMessage);
+                    return;
+                }
+
+                if (!response.ok) {
+                    console.error('API Response not OK:', response.status, data);
+                    addMessage('assistant', `❌ HTTP ${response.status} Error\n\nResponse: ${JSON.stringify(data, null, 2)}`);
+                    return;
+                }
+
+                const assistantMessage = data.choices[0].message;
+                let responseText = assistantMessage.content || '';
+
+                // Handle tool calls
+                if (assistantMessage.tool_calls) {
+                    console.log('Tool calls detected:', assistantMessage.tool_calls);
+
+                    // Add the assistant message with tool calls to history
+                    conversationHistory.push(assistantMessage);
+
+                    for (const toolCall of assistantMessage.tool_calls) {
+                        const toolName = toolCall.function.name;
+                        const toolArgs = JSON.parse(toolCall.function.arguments);
+
+                        console.log(`Calling tool: ${toolName}`, toolArgs);
+
+                        const toolResponse = await fetch(`${SERVER_URL}/test-tool`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                tool: toolName,
+                                params: toolArgs
+                            })
+                        });
+
+                        const toolResult = await toolResponse.json();
+                        console.log(`Tool result for ${toolName}:`, toolResult);
+
+                        // Add tool response to history
+                        const toolMessage = {
+                            role: 'tool',
+                            tool_call_id: toolCall.id,
+                            content: JSON.stringify(toolResult)
+                        };
+                        conversationHistory.push(toolMessage);
+
+                        // Generate follow-up message based on tool result
+                        const followUpBody = {
+                            model: 'gpt-3.5-turbo',
+                            messages: [
+                                {
+                                    role: 'system',
+                                    content: `You are ChatGPT with access to A Plus Garage Door services. You help customers with garage door issues across Nevada and Utah.
+
+When users mention garage door problems:
+1. Ask clarifying questions if needed (symptoms, location)
+2. Use check_service_area to verify coverage
+3. Use diagnose_issue to analyze the problem
+4. Suggest appropriate service and use create_service_request if they want to book
+
+IMPORTANT FORMATTING RULES:
+- Keep responses SHORT and conversational (2-3 sentences max when showing a widget)
+- The widget displays all the details, so DON'T repeat information that's shown in the widget
+- Use natural language, avoid asterisks, dashes, and excessive formatting
+- When booking is confirmed, say something brief like "Great! I've scheduled your appointment. Check the details below."
+- Be professional, friendly, and caring about their safety`
+                                },
+                                ...conversationHistory
+                            ]
+                        };
+
+                        console.log('Follow-up request:', followUpBody);
+
+                        const followUpResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${apiKey}`
+                            },
+                            body: JSON.stringify(followUpBody)
+                        });
+
+                        const followUpData = await followUpResponse.json();
+                        console.log('Follow-up response:', followUpData);
+
+                        if (followUpData.error) {
+                            console.error('Follow-up API Error:', followUpData.error);
+                            addMessage('assistant', `❌ Error getting response: ${followUpData.error.message}`);
+                            return;
+                        }
+
+                        responseText = followUpData.choices[0].message.content;
+
+                        // Display response with widget
+                        addMessage('assistant', responseText, true, { toolName, toolData: toolResult });
+
+                        // Add the final assistant response to history
+                        conversationHistory.push({
+                            role: 'assistant',
+                            content: responseText
+                        });
+
+                        console.log('Conversation history after tool call:', conversationHistory);
+                        return;
+                    }
+                }
+
+                // No tool calls, just display the message
+                if (responseText) {
+                    addMessage('assistant', responseText);
+                    conversationHistory.push({
+                        role: 'assistant',
+                        content: responseText
+                    });
+                }
+
+            } catch (error) {
+                removeTyping();
+                addMessage('assistant', '❌ Error: ' + error.message);
+            } finally {
+                input.disabled = false;
+                document.getElementById('sendButton').disabled = false;
+                input.focus();
+            }
+        }
+
+        async function getToolDefinitions() {
+            return [
+                {
+                    type: 'function',
+                    function: {
+                        name: 'check_service_area',
+                        description: 'Check if A Plus Garage Door services a location in Nevada or Utah',
+                        parameters: {
+                            type: 'object',
+                            properties: {
+                                location: {
+                                    type: 'string',
+                                    description: 'City name or zip code'
+                                }
+                            },
+                            required: ['location']
+                        }
+                    }
+                },
+                {
+                    type: 'function',
+                    function: {
+                        name: 'diagnose_issue',
+                        description: 'Diagnose garage door problems from symptoms',
+                        parameters: {
+                            type: 'object',
+                            properties: {
+                                symptoms: {
+                                    type: 'array',
+                                    items: { type: 'string' },
+                                    description: 'List of symptoms described by the user'
+                                }
+                            },
+                            required: ['symptoms']
+                        }
+                    }
+                },
+                {
+                    type: 'function',
+                    function: {
+                        name: 'create_service_request',
+                        description: 'Book a garage door service appointment',
+                        parameters: {
+                            type: 'object',
+                            properties: {
+                                service_type: {
+                                    type: 'string',
+                                    enum: ['emergency_repair', 'standard_repair', 'installation', 'maintenance']
+                                },
+                                issue_summary: { type: 'string' },
+                                customer_name: { type: 'string' },
+                                phone: { type: 'string' },
+                                address: { type: 'string' }
+                            },
+                            required: ['service_type', 'issue_summary', 'customer_name', 'phone', 'address']
+                        }
+                    }
+                }
+            ];
+        }
+
+        function clearChat() {
+            if (confirm('Start a new chat?')) {
+                conversationHistory.length = 0;
+                // Show quick actions again
+                const quickActions = document.getElementById('quickActions');
+                if (quickActions) {
+                    quickActions.style.display = 'flex';
+                }
+                initializeChat();
+            }
+        }
+    </script>
+</body>
+</html>

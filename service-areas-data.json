@@ -1,0 +1,168 @@
+{
+  "regions": {
+    "nevada": {
+      "state": "Nevada",
+      "phone": "(702) 297-7811",
+      "timezone": "America/Los_Angeles",
+      "areas": [
+        {
+          "name": "Las Vegas",
+          "type": "city",
+          "zip_prefixes": ["891"],
+          "coords": { "lat": 36.1699, "lng": -115.1398 }
+        },
+        {
+          "name": "Henderson",
+          "type": "city",
+          "zip_prefixes": ["890"],
+          "coords": { "lat": 36.0395, "lng": -114.9817 }
+        },
+        {
+          "name": "North Las Vegas",
+          "type": "city",
+          "zip_prefixes": ["890"],
+          "coords": { "lat": 36.1989, "lng": -115.1175 }
+        },
+        {
+          "name": "Boulder City",
+          "type": "city",
+          "zip_prefixes": ["890"],
+          "coords": { "lat": 35.9780, "lng": -114.8322 }
+        },
+        {
+          "name": "Mesquite",
+          "type": "city",
+          "zip_prefixes": ["890"],
+          "coords": { "lat": 36.8055, "lng": -114.0672 }
+        },
+        {
+          "name": "Summerlin",
+          "type": "suburb",
+          "zip_prefixes": ["891"],
+          "coords": { "lat": 36.1872, "lng": -115.3640 }
+        },
+        {
+          "name": "Paradise",
+          "type": "suburb",
+          "zip_prefixes": ["891"],
+          "coords": { "lat": 36.0970, "lng": -115.1346 }
+        },
+        {
+          "name": "Enterprise",
+          "type": "suburb",
+          "zip_prefixes": ["891"],
+          "coords": { "lat": 36.0267, "lng": -115.2320 }
+        },
+        {
+          "name": "Spring Valley",
+          "type": "suburb",
+          "zip_prefixes": ["891"],
+          "coords": { "lat": 36.1080, "lng": -115.2450 }
+        },
+        {
+          "name": "Sunrise Manor",
+          "type": "suburb",
+          "zip_prefixes": ["891"],
+          "coords": { "lat": 36.2110, "lng": -115.0730 }
+        },
+        {
+          "name": "Whitney",
+          "type": "suburb",
+          "zip_prefixes": ["890"],
+          "coords": { "lat": 36.0350, "lng": -115.0350 }
+        }
+      ]
+    },
+    "utah": {
+      "state": "Utah",
+      "phone": "(801) 683-6222",
+      "timezone": "America/Denver",
+      "regions": {
+        "salt_lake_metro": {
+          "name": "Salt Lake City Metro",
+          "areas": [
+            { "name": "Salt Lake City", "zip_prefixes": ["841"], "coords": { "lat": 40.7608, "lng": -111.8910 } },
+            { "name": "West Valley City", "zip_prefixes": ["841"], "coords": { "lat": 40.6916, "lng": -112.0011 } },
+            { "name": "Sandy", "zip_prefixes": ["840"], "coords": { "lat": 40.5650, "lng": -111.8389 } },
+            { "name": "West Jordan", "zip_prefixes": ["840"], "coords": { "lat": 40.6097, "lng": -111.9391 } },
+            { "name": "South Jordan", "zip_prefixes": ["840"], "coords": { "lat": 40.5622, "lng": -111.9297 } },
+            { "name": "Murray", "zip_prefixes": ["841"], "coords": { "lat": 40.6669, "lng": -111.8880 } },
+            { "name": "Draper", "zip_prefixes": ["840"], "coords": { "lat": 40.5246, "lng": -111.8638 } },
+            { "name": "Riverton", "zip_prefixes": ["840"], "coords": { "lat": 40.5219, "lng": -111.9391 } },
+            { "name": "Taylorsville", "zip_prefixes": ["841"], "coords": { "lat": 40.6677, "lng": -111.9388 } },
+            { "name": "Midvale", "zip_prefixes": ["840"], "coords": { "lat": 40.6110, "lng": -111.8999 } },
+            { "name": "Cottonwood Heights", "zip_prefixes": ["840"], "coords": { "lat": 40.6197, "lng": -111.8099 } },
+            { "name": "Herriman", "zip_prefixes": ["840"], "coords": { "lat": 40.5141, "lng": -112.0327 } },
+            { "name": "Bluffdale", "zip_prefixes": ["840"], "coords": { "lat": 40.4897, "lng": -111.9388 } },
+            { "name": "Millcreek", "zip_prefixes": ["840"], "coords": { "lat": 40.6868, "lng": -111.8758 } },
+            { "name": "Holladay", "zip_prefixes": ["840"], "coords": { "lat": 40.6686, "lng": -111.8247 } },
+            { "name": "South Salt Lake", "zip_prefixes": ["841"], "coords": { "lat": 40.7186, "lng": -111.8883 } },
+            { "name": "Alta", "zip_prefixes": ["840"], "coords": { "lat": 40.5885, "lng": -111.6382 } }
+          ]
+        },
+        "provo_utah_valley": {
+          "name": "Provo/Utah Valley",
+          "areas": [
+            { "name": "Provo", "zip_prefixes": ["846"], "coords": { "lat": 40.2338, "lng": -111.6585 } },
+            { "name": "Orem", "zip_prefixes": ["840"], "coords": { "lat": 40.2969, "lng": -111.6946 } },
+            { "name": "Lehi", "zip_prefixes": ["840"], "coords": { "lat": 40.3916, "lng": -111.8508 } },
+            { "name": "American Fork", "zip_prefixes": ["840"], "coords": { "lat": 40.3769, "lng": -111.7957 } },
+            { "name": "Spanish Fork", "zip_prefixes": ["846"], "coords": { "lat": 40.1150, "lng": -111.6549 } },
+            { "name": "Springville", "zip_prefixes": ["846"], "coords": { "lat": 40.1652, "lng": -111.6108 } },
+            { "name": "Payson", "zip_prefixes": ["846"], "coords": { "lat": 40.0444, "lng": -111.7321 } },
+            { "name": "Pleasant Grove", "zip_prefixes": ["840"], "coords": { "lat": 40.3641, "lng": -111.7385 } },
+            { "name": "Saratoga Springs", "zip_prefixes": ["840"], "coords": { "lat": 40.3491, "lng": -111.9046 } },
+            { "name": "Eagle Mountain", "zip_prefixes": ["840"], "coords": { "lat": 40.3141, "lng": -112.0077 } },
+            { "name": "Alpine", "zip_prefixes": ["840"], "coords": { "lat": 40.4533, "lng": -111.7782 } },
+            { "name": "Highland", "zip_prefixes": ["840"], "coords": { "lat": 40.4285, "lng": -111.7916 } },
+            { "name": "Lindon", "zip_prefixes": ["840"], "coords": { "lat": 40.3433, "lng": -111.7210 } },
+            { "name": "Vineyard", "zip_prefixes": ["840"], "coords": { "lat": 40.2977, "lng": -111.7585 } },
+            { "name": "Mapleton", "zip_prefixes": ["846"], "coords": { "lat": 40.1303, "lng": -111.5785 } },
+            { "name": "Salem", "zip_prefixes": ["846"], "coords": { "lat": 40.0530, "lng": -111.6735 } },
+            { "name": "Santaquin", "zip_prefixes": ["846"], "coords": { "lat": 39.9752, "lng": -111.7852 } },
+            { "name": "Cedar Hills", "zip_prefixes": ["840"], "coords": { "lat": 40.4141, "lng": -111.7588 } },
+            { "name": "Elk Ridge", "zip_prefixes": ["846"], "coords": { "lat": 40.0116, "lng": -111.6768 } },
+            { "name": "Woodland Hills", "zip_prefixes": ["846"], "coords": { "lat": 40.0094, "lng": -111.6402 } },
+            { "name": "Goshen", "zip_prefixes": ["846"], "coords": { "lat": 39.9533, "lng": -111.9013 } },
+            { "name": "Genola", "zip_prefixes": ["846"], "coords": { "lat": 39.9972, "lng": -111.8435 } },
+            { "name": "Cedar Fort", "zip_prefixes": ["840"], "coords": { "lat": 40.3519, "lng": -112.0977 } },
+            { "name": "Fairfield", "zip_prefixes": ["840"], "coords": { "lat": 40.2624, "lng": -112.0927 } }
+          ]
+        },
+        "ogden_area": {
+          "name": "Ogden Area",
+          "areas": [
+            { "name": "Ogden", "zip_prefixes": ["844"], "coords": { "lat": 41.2230, "lng": -111.9738 } },
+            { "name": "Roy", "zip_prefixes": ["840"], "coords": { "lat": 41.1616, "lng": -112.0263 } },
+            { "name": "North Ogden", "zip_prefixes": ["844"], "coords": { "lat": 41.3072, "lng": -111.9599 } },
+            { "name": "South Ogden", "zip_prefixes": ["844"], "coords": { "lat": 41.1858, "lng": -111.9713 } },
+            { "name": "Riverdale", "zip_prefixes": ["844"], "coords": { "lat": 41.1769, "lng": -112.0027 } },
+            { "name": "Washington Terrace", "zip_prefixes": ["844"], "coords": { "lat": 41.1727, "lng": -111.9766 } },
+            { "name": "Hooper", "zip_prefixes": ["844"], "coords": { "lat": 41.1641, "lng": -112.1219 } },
+            { "name": "Harrisville", "zip_prefixes": ["844"], "coords": { "lat": 41.2888, "lng": -111.9868 } },
+            { "name": "Pleasant View", "zip_prefixes": ["844"], "coords": { "lat": 41.3194, "lng": -111.9985 } },
+            { "name": "Farr West", "zip_prefixes": ["844"], "coords": { "lat": 41.2974, "lng": -112.0277 } },
+            { "name": "Plain City", "zip_prefixes": ["844"], "coords": { "lat": 41.2986, "lng": -112.0860 } },
+            { "name": "West Haven", "zip_prefixes": ["844"], "coords": { "lat": 41.2027, "lng": -112.0516 } },
+            { "name": "Marriott-Slaterville", "zip_prefixes": ["844"], "coords": { "lat": 41.2527, "lng": -112.0255 } },
+            { "name": "Uintah", "zip_prefixes": ["844"], "coords": { "lat": 41.1455, "lng": -111.9299 } },
+            { "name": "Huntsville", "zip_prefixes": ["844"], "coords": { "lat": 41.2577, "lng": -111.7577 } }
+          ]
+        },
+        "st_george": {
+          "name": "St. George/Southern Utah",
+          "areas": [
+            { "name": "St. George", "zip_prefixes": ["847"], "coords": { "lat": 37.0965, "lng": -113.5684 } }
+          ]
+        }
+      }
+    }
+  },
+  "coverage_notes": {
+    "nevada": "24/7 emergency service across all Las Vegas Valley locations",
+    "utah": "Service from St. George to Ogden and most cities in-between",
+    "emergency": "Same-day service available in most areas",
+    "phone_nevada": "(702) 297-7811",
+    "phone_utah": "(801) 683-6222"
+  }
+}
