@@ -7,14 +7,10 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
     outDir: '../../dist/widgets',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         'service-area-result': resolve(__dirname, 'service-area-result.html'),
-        'diagnosis-result': resolve(__dirname, 'diagnosis-result.html'),
-        'appointment-confirmation': resolve(__dirname, 'appointment-confirmation.html'),
-        'promotions-carousel': resolve(__dirname, 'promotions-carousel.html'),
-        'availability-slots': resolve(__dirname, 'availability-slots.html'),
-        'door-styles-carousel': resolve(__dirname, 'door-styles-carousel.html'),
       },
     },
   },
