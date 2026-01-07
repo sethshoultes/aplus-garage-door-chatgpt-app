@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Badge } from '@openai/apps-sdk-ui/components/Badge';
-import { Phone, AlertTriangle } from 'lucide-react';
+import { Phone, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import './app.css';
 
 declare global {

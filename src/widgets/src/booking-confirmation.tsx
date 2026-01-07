@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 import { Calendar, Phone, CheckCircle2 } from 'lucide-react';
 import './app.css';
 
@@ -51,7 +49,7 @@ function BookingConfirmation() {
 
   if (loading) {
     return (
-      <div className="p-4 max-w-md">
+      <div className="w-full max-w-md mx-auto p-4">
         <div className="animate-pulse space-y-3">
           <div className="h-4 bg-gray-200 rounded w-3/4"></div>
           <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -62,7 +60,7 @@ function BookingConfirmation() {
 
   if (!data) {
     return (
-      <div className="p-4 max-w-md">
+      <div className="w-full max-w-md mx-auto p-4">
         <p className="text-gray-600">Unable to load booking information.</p>
       </div>
     );
@@ -77,7 +75,7 @@ function BookingConfirmation() {
   };
 
   return (
-    <div className="p-6 max-w-md space-y-4 rounded-2xl border bg-surface shadow-lg">
+    <div className="p-6 w-full max-w-md mx-auto space-y-4 rounded-2xl border border-gray-200 bg-white shadow-lg">
       {/* Header with Success Icon */}
       <div className="flex items-start gap-3">
         <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
@@ -86,7 +84,9 @@ function BookingConfirmation() {
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900">Appointment Confirmed!</h3>
           <div className="flex items-center gap-2 mt-1">
-            <Badge color="success">{data.status.toUpperCase()}</Badge>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              {data.status.toUpperCase()}
+            </span>
             <span className="text-sm text-gray-600">#{data.confirmation_number}</span>
           </div>
         </div>
@@ -136,7 +136,9 @@ function BookingConfirmation() {
               <p className="text-sm font-semibold text-green-900">🏷️ Promotion Applied</p>
               <p className="text-xs text-green-800 mt-0.5">{data.promotion_applied.discount}</p>
             </div>
-            <Badge color="success">{data.promotion_applied.code}</Badge>
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              {data.promotion_applied.code}
+            </span>
           </div>
         </div>
       )}
@@ -151,19 +153,20 @@ function BookingConfirmation() {
 
       {/* Action Buttons */}
       <div className="flex gap-2">
-        <Button onClick={handleCall} variant="soft" color="secondary" block>
+        <button
+          onClick={handleCall}
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-lg transition-colors"
+        >
           <Phone className="size-4" />
           Call Us
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={() => window.openai.sendMessage("I need to reschedule")}
-          variant="soft"
-          color="secondary"
-          block
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-lg transition-colors"
         >
           <Calendar className="size-4" />
           Reschedule
-        </Button>
+        </button>
       </div>
     </div>
   );
