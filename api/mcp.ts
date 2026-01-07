@@ -429,22 +429,53 @@ export default async function handler(
           });
       }
 
-      return res.status(200).json({
-        jsonrpc: '2.0',
-        result: {
-          structuredContent: result,
-          content: [
-            {
-              type: "text",
-              text: `Tool ${name} executed successfully`
-            }
-          ],
-          _meta: {
-            widgetUrl: widgetUrl
-          }
-        },
-        id
-      });
+      // Fetch the widget HTML and inject the data
+      try {
+        const widgetResponse = await fetch(widgetUrl);
+        let widgetHtml = await widgetResponse.text();
+
+        // Inject the data directly into the HTML
+        widgetHtml = widgetHtml.replace(
+          '</head>',
+          `<script>window.__TOOL_OUTPUT__ = ${JSON.stringify(result)};</script></head>`
+        );
+
+        // Also remove the non-existent bridge.js script
+        widgetHtml = widgetHtml.replace(
+          '<script src="https://cdn.openai.com/apps-sdk/bridge.js"></script>',
+          ''
+        );
+
+        return res.status(200).json({
+          jsonrpc: '2.0',
+          result: {
+            content: [
+              {
+                type: "text",
+                text: `Tool ${name} executed successfully`
+              },
+              {
+                type: "resource",
+                resource: {
+                  uri: widgetUrl,
+                  mimeType: "text/html",
+                  text: widgetHtml
+                }
+              }
+            ]
+          },
+          id
+        });
+      } catch (error: any) {
+        return res.status(200).json({
+          jsonrpc: '2.0',
+          error: {
+            code: -32603,
+            message: `Failed to render widget: ${error.message}`
+          },
+          id
+        });
+      }
     }
 
     // Unknown method error
