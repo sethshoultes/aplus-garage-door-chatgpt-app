@@ -434,21 +434,17 @@ export default async function handler(
         const widgetResponse = await fetch(widgetUrl);
         let widgetHtml = await widgetResponse.text();
 
-        // Inject the data directly into the HTML
+        // Inject the data directly into the HTML as backup
         widgetHtml = widgetHtml.replace(
           '</head>',
           `<script>window.__TOOL_OUTPUT__ = ${JSON.stringify(result)};</script></head>`
         );
 
-        // Also remove the non-existent bridge.js script
-        widgetHtml = widgetHtml.replace(
-          '<script src="https://cdn.openai.com/apps-sdk/bridge.js"></script>',
-          ''
-        );
-
         return res.status(200).json({
           jsonrpc: '2.0',
           result: {
+            // MCPJam needs structuredContent to populate window.openai.toolOutput
+            structuredContent: result,
             content: [
               {
                 type: "text",
@@ -462,7 +458,10 @@ export default async function handler(
                   text: widgetHtml
                 }
               }
-            ]
+            ],
+            _meta: {
+              widgetUrl: widgetUrl
+            }
           },
           id
         });
