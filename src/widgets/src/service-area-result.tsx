@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Check, Phone, Calendar, AlertTriangle } from 'lucide-react';
+import { Button } from '@openai/apps-sdk-ui/components/Button';
+import { Badge } from '@openai/apps-sdk-ui/components/Badge';
+import {Phone, Calendar, AlertTriangle, CheckCircle2} from 'lucide-react';
+import './app.css';
 
 declare global {
   interface Window {
@@ -42,9 +45,11 @@ function ServiceAreaResult() {
 
   if (loading) {
     return (
-      <div className="p-4 max-w-md animate-pulse">
-        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div className="p-4 max-w-md">
+        <div className="animate-pulse space-y-3">
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        </div>
       </div>
     );
   }
@@ -69,75 +74,98 @@ function ServiceAreaResult() {
 
   if (data.is_covered) {
     return (
-      <div className="p-4 max-w-md">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-            <Check className="w-6 h-6 text-green-600" />
+      <div className="p-6 max-w-md space-y-4 rounded-2xl border bg-surface shadow-lg">
+        {/* Header */}
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5">
+            <CheckCircle2 className="size-5 text-green-600" />
           </div>
-          <div>
-            <p className="font-semibold text-gray-900">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900">
               We service {data.service_area_name}!
-            </p>
-            <p className="text-sm text-gray-600">
-              {data.state} • 24/7 emergency service available
-            </p>
+            </h3>
+            <div className="flex items-center gap-2 mt-1">
+              <Badge color="success">{data.state}</Badge>
+              <Badge color="primary">24/7 Emergency</Badge>
+            </div>
           </div>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-3 mb-3">
+        {/* Info Card */}
+        <div className="rounded-lg bg-gray-50 p-4 border border-gray-200">
           <p className="text-sm text-gray-700">
-            A Plus Garage Doors has been serving {data.service_area_name} with
-            same-day service and expert technicians.
+            A Plus Garage Doors has been serving {data.service_area_name} with same-day service and expert technicians. Our team is ready to help you today!
           </p>
         </div>
 
-        <div className="flex gap-2">
-          <button
-            onClick={handleCall}
-            className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-red-700 transition flex items-center justify-center gap-2"
-          >
-            <Phone className="w-4 h-4" />
-            Call Now
-          </button>
-          <button
-            onClick={handleBook}
-            className="flex-1 bg-gray-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-800 transition flex items-center justify-center gap-2"
-          >
-            <Calendar className="w-4 h-4" />
-            Book Online
-          </button>
+        {/* Contact Info */}
+        <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-200">
+          <div>
+            <p className="text-xs font-medium text-blue-900 uppercase tracking-wide">Direct Line</p>
+            <p className="text-lg font-semibold text-blue-900">{data.phone}</p>
+          </div>
+          <Phone className="size-6 text-blue-600" />
         </div>
 
-        <p className="text-xs text-center text-gray-500 mt-2">{data.phone}</p>
+        {/* Action Buttons */}
+        <div className="flex gap-2">
+          <Button
+            onClick={handleCall}
+            variant="solid"
+            color="primary"
+            block
+          >
+            <Phone className="size-4" />
+            Call Now
+          </Button>
+          <Button
+            onClick={handleBook}
+            variant="soft"
+            color="secondary"
+            block
+          >
+            <Calendar className="size-4" />
+            Book Online
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 max-w-md">
-      <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
-          <AlertTriangle className="w-6 h-6 text-yellow-600" />
+    <div className="p-6 max-w-md space-y-4 rounded-2xl border bg-surface shadow-lg">
+      {/* Header */}
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5">
+          <AlertTriangle className="size-5 text-amber-600" />
         </div>
-        <div>
-          <p className="font-semibold text-gray-900">Outside service area</p>
-          <p className="text-sm text-gray-600">
-            Nearest coverage: {data.nearest_coverage}
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold text-gray-900">Outside service area</h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Nearest coverage: <span className="font-medium">{data.nearest_coverage}</span>
           </p>
         </div>
       </div>
 
-      <p className="text-sm text-gray-600 mb-3">
-        Call us to discuss options—we may still be able to help!
-      </p>
+      {/* Info */}
+      <div className="rounded-lg bg-amber-50 p-4 border border-amber-200">
+        <p className="text-sm text-amber-900">
+          Call us to discuss options—we may still be able to help with your garage door needs!
+        </p>
+      </div>
 
-      <button
-        onClick={handleCall}
-        className="w-full bg-gray-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-800 transition flex items-center justify-center gap-2"
-      >
-        <Phone className="w-4 h-4" />
-        {data.phone}
-      </button>
+      {/* Call Button */}
+      {data.phone && (
+        <Button
+          onClick={handleCall}
+          variant="solid"
+          color="secondary"
+          block
+        >
+          <Phone className="size-4" />
+          Call {data.phone}
+        </Button>
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@
     "build": "npm run build:server && npm run build:widgets",
     "build:server": "tsc",
     "build:widgets": "cd src/widgets && vite build",
-    "vercel-build": "npm run build",
+    "vercel-build": "echo 'Widgets pre-built - ready to deploy'",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
     "test": "echo \"Tests coming soon\" && exit 0"

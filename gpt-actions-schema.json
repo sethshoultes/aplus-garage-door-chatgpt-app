@@ -1,0 +1,63 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "A Plus Garage Door Service API",
+    "description": "API for checking service coverage, diagnosing garage door issues, and booking appointments",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://aplus-garage-door-chatgpt-app.vercel.app"
+    }
+  ],
+  "paths": {
+    "/api/test-tool": {
+      "post": {
+        "operationId": "checkServiceArea",
+        "summary": "Check if A Plus Garage Door services a specific location",
+        "description": "ONLY use this tool when the user has explicitly stated their city, neighborhood, or zip code. Do NOT call this tool if you don't know the user's location - ask them first.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tool": {
+                    "type": "string",
+                    "enum": ["check_service_area"]
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "The city name, neighborhood, or zip code the user explicitly mentioned (e.g., 'Henderson', 'Las Vegas', 'Salt Lake City', '89123')"
+                  }
+                },
+                "required": ["tool", "location"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service area information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "location": { "type": "string" },
+                    "is_covered": { "type": "boolean" },
+                    "service_area_name": { "type": "string" },
+                    "state": { "type": "string" },
+                    "phone": { "type": "string" },
+                    "emergency_available": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

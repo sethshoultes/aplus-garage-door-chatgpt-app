@@ -1,0 +1,73 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "A Plus Garage Door MCP Server",
+    "version": "1.0.0",
+    "description": "Garage door service tools for checking coverage, diagnosing issues, and booking appointments"
+  },
+  "servers": [
+    {
+      "url": "https://aplus-garage-door-chatgpt-app.vercel.app/api"
+    }
+  ],
+  "paths": {
+    "/mcp": {
+      "post": {
+        "operationId": "callMcpTool",
+        "summary": "Call an MCP tool",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jsonrpc": {
+                    "type": "string",
+                    "enum": ["2.0"]
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": ["tools/call"]
+                  },
+                  "params": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "enum": ["check_service_area", "diagnose_issue", "create_service_request"]
+                      },
+                      "arguments": {
+                        "type": "object"
+                      }
+                    },
+                    "required": ["name", "arguments"]
+                  },
+                  "id": {
+                    "type": "integer"
+                  }
+                },
+                "required": ["jsonrpc", "method", "params", "id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -523,7 +523,7 @@ ${JSON.stringify(data.error, null, 2)}
 
                         console.log(`Calling tool: ${toolName}`, toolArgs);
 
-                        const toolResponse = await fetch(`${SERVER_URL}/test-tool`, {
+                        const toolResponse = await fetch(`${SERVER_URL}/api/test-tool`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({

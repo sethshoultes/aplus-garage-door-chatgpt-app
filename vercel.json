@@ -1,8 +1,17 @@
 {
   "framework": null,
-  "buildCommand": "npm run build:widgets",
-  "installCommand": "npm install && cd src/widgets && npm install",
   "outputDirectory": ".",
   "cleanUrls": false,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/dist/widgets/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ]
 }

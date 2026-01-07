@@ -2,9 +2,10 @@
 node_modules/
 
 # Build outputs
-dist/
+dist/server/
 build/
 *.tsbuildinfo
+# Note: dist/widgets is committed for deployment
 
 # Environment files
 .env
@@ -39,3 +40,4 @@ clear-and-start.html
 
 # Vercel
 .vercel
+.env*.local
