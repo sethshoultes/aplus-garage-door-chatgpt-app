@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Button } from '@openai/apps-sdk-ui/components/Button';
-import { Badge } from '@openai/apps-sdk-ui/components/Badge';
 import {Phone, Calendar, AlertTriangle, CheckCircle2} from 'lucide-react';
 import './app.css';
 
@@ -150,8 +148,12 @@ function ServiceAreaResult() {
               We service {data.service_area_name}!
             </h3>
             <div className="flex items-center gap-2 mt-1">
-              <Badge color="success">{data.state}</Badge>
-              <Badge color="primary">24/7 Emergency</Badge>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                {data.state}
+              </span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                24/7 Emergency
+              </span>
             </div>
           </div>
         </div>
@@ -174,24 +176,20 @@ function ServiceAreaResult() {
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <Button
+          <button
             onClick={handleCall}
-            variant="solid"
-            color="primary"
-            block
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
           >
             <Phone className="size-4" />
             Call Now
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={handleBook}
-            variant="soft"
-            color="secondary"
-            block
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-lg transition-colors"
           >
             <Calendar className="size-4" />
             Book Online
-          </Button>
+          </button>
         </div>
       </div>
     );
@@ -221,15 +219,13 @@ function ServiceAreaResult() {
 
       {/* Call Button */}
       {data.phone && (
-        <Button
+        <button
           onClick={handleCall}
-          variant="solid"
-          color="secondary"
-          block
+          className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-800 hover:bg-gray-900 text-white font-medium rounded-lg transition-colors"
         >
           <Phone className="size-4" />
           Call {data.phone}
-        </Button>
+        </button>
       )}
     </div>
   );
