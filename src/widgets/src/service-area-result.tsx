@@ -35,6 +35,8 @@ function ServiceAreaResult() {
       try {
         console.log('[Widget] Checking for window.openai...');
         console.log('[Widget] window.openai exists:', !!window.openai);
+        console.log('[Widget] window.openai keys:', window.openai ? Object.keys(window.openai) : 'N/A');
+        console.log('[Widget] window.openai object:', window.openai);
 
         if (!window.openai) {
           console.error('[Widget] window.openai is not available');
@@ -43,10 +45,28 @@ function ServiceAreaResult() {
           return;
         }
 
-        console.log('[Widget] Calling getToolOutput...');
-        const output = await window.openai.getToolOutput();
-        console.log('[Widget] Received output:', output);
+        // Check what methods are available
+        console.log('[Widget] getToolOutput type:', typeof window.openai.getToolOutput);
 
+        // Try different ways to get the data
+        let output;
+        if (typeof window.openai.getToolOutput === 'function') {
+          console.log('[Widget] Calling getToolOutput...');
+          output = await window.openai.getToolOutput();
+        } else if ((window.openai as any).structuredContent) {
+          console.log('[Widget] Using structuredContent directly');
+          output = (window.openai as any).structuredContent;
+        } else if ((window as any).__TOOL_OUTPUT__) {
+          console.log('[Widget] Using __TOOL_OUTPUT__');
+          output = (window as any).__TOOL_OUTPUT__;
+        } else {
+          console.error('[Widget] No way to get tool output');
+          setError('getToolOutput is not a function. Available: ' + Object.keys(window.openai).join(', '));
+          setLoading(false);
+          return;
+        }
+
+        console.log('[Widget] Received output:', output);
         setData(output);
       } catch (error) {
         console.error('[Widget] Failed to fetch tool output:', error);
