@@ -434,6 +434,20 @@ export default async function handler(
         const widgetResponse = await fetch(widgetUrl);
         let widgetHtml = await widgetResponse.text();
 
+        // Extract CSS link and inline it
+        const cssLinkMatch = widgetHtml.match(/<link rel="stylesheet"[^>]+href="([^"]+)"[^>]*>/);
+        if (cssLinkMatch) {
+          const cssUrl = cssLinkMatch[1];
+          const cssResponse = await fetch(cssUrl);
+          const cssContent = await cssResponse.text();
+
+          // Replace CSS link with inline style
+          widgetHtml = widgetHtml.replace(
+            cssLinkMatch[0],
+            `<style>${cssContent}</style>`
+          );
+        }
+
         // Inject the data directly into the HTML as backup
         widgetHtml = widgetHtml.replace(
           '</head>',
