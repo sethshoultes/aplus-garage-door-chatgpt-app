@@ -53,9 +53,11 @@ function ServiceAreaResult() {
         if ((window.openai as any).toolOutput) {
           console.log('[Widget] Using toolOutput property');
           output = (window.openai as any).toolOutput;
+          console.log('[Widget] toolOutput value:', JSON.stringify(output, null, 2));
         } else if ((window as any).__TOOL_OUTPUT__) {
           console.log('[Widget] Using __TOOL_OUTPUT__');
           output = (window as any).__TOOL_OUTPUT__;
+          console.log('[Widget] __TOOL_OUTPUT__ value:', JSON.stringify(output, null, 2));
         } else {
           console.error('[Widget] No way to get tool output');
           setError('toolOutput not found. Available: ' + Object.keys(window.openai).join(', '));
@@ -63,7 +65,9 @@ function ServiceAreaResult() {
           return;
         }
 
-        console.log('[Widget] Received output:', output);
+        console.log('[Widget] Final output to render:', JSON.stringify(output, null, 2));
+        console.log('[Widget] is_covered =', output?.is_covered);
+        console.log('[Widget] service_area_name =', output?.service_area_name);
         setData(output);
       } catch (error) {
         console.error('[Widget] Failed to fetch tool output:', error);
