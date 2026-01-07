@@ -102,7 +102,7 @@ function ServiceAreaResult() {
 
   if (loading) {
     return (
-      <div className="p-4 max-w-md">
+      <div className="w-full max-w-md mx-auto p-4">
         <div className="animate-pulse space-y-3">
           <div className="h-4 bg-gray-200 rounded w-3/4"></div>
           <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -113,7 +113,7 @@ function ServiceAreaResult() {
 
   if (!data) {
     return (
-      <div className="p-4 max-w-md space-y-2">
+      <div className="w-full max-w-md mx-auto p-4 space-y-2">
         <p className="text-gray-900 font-semibold">Unable to load service area information</p>
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded">
@@ -137,7 +137,7 @@ function ServiceAreaResult() {
 
   if (data.is_covered) {
     return (
-      <div className="p-6 max-w-md space-y-4 rounded-2xl border bg-surface shadow-lg">
+      <div className="p-6 w-full max-w-md mx-auto space-y-4 rounded-2xl border border-gray-200 bg-white shadow-lg">
         {/* Header */}
         <div className="flex items-start gap-3">
           <div className="mt-0.5">
@@ -196,7 +196,7 @@ function ServiceAreaResult() {
   }
 
   return (
-    <div className="p-6 max-w-md space-y-4 rounded-2xl border bg-surface shadow-lg">
+    <div className="p-6 w-full max-w-md mx-auto space-y-4 rounded-2xl border border-gray-200 bg-white shadow-lg">
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className="mt-0.5">
