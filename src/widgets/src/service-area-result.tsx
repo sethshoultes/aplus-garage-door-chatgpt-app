@@ -28,19 +28,57 @@ interface ServiceAreaData {
 function ServiceAreaResult() {
   const [data, setData] = useState<ServiceAreaData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        console.log('[Widget] Checking for window.openai...');
+        console.log('[Widget] window.openai exists:', !!window.openai);
+
+        if (!window.openai) {
+          console.error('[Widget] window.openai is not available');
+          setError('OpenAI bridge not available');
+          setLoading(false);
+          return;
+        }
+
+        console.log('[Widget] Calling getToolOutput...');
         const output = await window.openai.getToolOutput();
+        console.log('[Widget] Received output:', output);
+
         setData(output);
       } catch (error) {
-        console.error('Failed to fetch tool output:', error);
+        console.error('[Widget] Failed to fetch tool output:', error);
+        setError(error instanceof Error ? error.message : String(error));
       } finally {
         setLoading(false);
       }
     }
-    fetchData();
+
+    // Wait for bridge to be ready
+    if (typeof window.openai !== 'undefined') {
+      fetchData();
+    } else {
+      console.log('[Widget] Waiting for bridge...');
+      const checkInterval = setInterval(() => {
+        if (typeof window.openai !== 'undefined') {
+          console.log('[Widget] Bridge ready!');
+          clearInterval(checkInterval);
+          fetchData();
+        }
+      }, 100);
+
+      // Timeout after 5 seconds
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        if (!window.openai) {
+          console.error('[Widget] Bridge timeout - window.openai never became available');
+          setError('Timeout waiting for OpenAI bridge');
+          setLoading(false);
+        }
+      }, 5000);
+    }
   }, []);
 
   if (loading) {
@@ -56,8 +94,14 @@ function ServiceAreaResult() {
 
   if (!data) {
     return (
-      <div className="p-4 max-w-md">
-        <p className="text-gray-600">Unable to load service area information.</p>
+      <div className="p-4 max-w-md space-y-2">
+        <p className="text-gray-900 font-semibold">Unable to load service area information</p>
+        {error && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded">
+            <p className="text-sm text-red-900 font-mono">{error}</p>
+          </div>
+        )}
+        <p className="text-xs text-gray-500">Check browser console for details</p>
       </div>
     );
   }
