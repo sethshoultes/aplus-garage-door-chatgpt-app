@@ -67,9 +67,24 @@ function DiagnosisResult() {
   }
 
   const urgencyConfig = {
-    emergency: { color: 'error' as const, label: 'Emergency', icon: '🚨' },
-    soon: { color: 'warning' as const, label: 'Service Soon', icon: '⚡' },
-    routine: { color: 'info' as const, label: 'Routine', icon: 'ℹ️' }
+    emergency: {
+      bgColor: 'bg-red-100',
+      textColor: 'text-red-800',
+      label: 'Emergency',
+      icon: '🚨'
+    },
+    soon: {
+      bgColor: 'bg-yellow-100',
+      textColor: 'text-yellow-800',
+      label: 'Service Soon',
+      icon: '⚡'
+    },
+    routine: {
+      bgColor: 'bg-blue-100',
+      textColor: 'text-blue-800',
+      label: 'Routine',
+      icon: 'ℹ️'
+    }
   };
 
   const config = urgencyConfig[data.urgency];
@@ -83,12 +98,12 @@ function DiagnosisResult() {
   };
 
   return (
-    <div className="p-6 max-w-md space-y-4 rounded-2xl border bg-surface shadow-lg">
+    <div className="p-6 w-full max-w-md mx-auto space-y-4 rounded-2xl border border-gray-200 bg-white shadow-lg">
       {/* Urgency Badge */}
       <div className="flex items-center justify-between">
-        <Badge color={config.color} className="text-sm">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.textColor}`}>
           {config.icon} {config.label}
-        </Badge>
+        </span>
         <div className="text-sm font-medium text-gray-600">
           ${data.estimated_cost_range.min}-${data.estimated_cost_range.max}
         </div>
@@ -141,11 +156,13 @@ function DiagnosisResult() {
       </div>
 
       {/* Action Button */}
-      <Button
+      <button
         onClick={handleSchedule}
-        variant="solid"
-        color={data.urgency === 'emergency' ? 'error' : 'primary'}
-        block
+        className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 font-medium rounded-lg transition-colors ${
+          data.urgency === 'emergency'
+            ? 'bg-red-600 hover:bg-red-700 text-white'
+            : 'bg-blue-600 hover:bg-blue-700 text-white'
+        }`}
       >
         {data.urgency === 'emergency' ? (
           <>
@@ -158,7 +175,7 @@ function DiagnosisResult() {
             Schedule Service
           </>
         )}
-      </Button>
+      </button>
     </div>
   );
 }
