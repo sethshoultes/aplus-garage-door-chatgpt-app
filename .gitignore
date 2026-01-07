@@ -41,3 +41,5 @@ clear-and-start.html
 # Vercel
 .vercel
 .env*.local
+
+/src/generated/prisma

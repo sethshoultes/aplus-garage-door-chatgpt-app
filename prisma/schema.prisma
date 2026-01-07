@@ -1,0 +1,295 @@
+// Prisma schema for A Plus Garage Door MCP Server v2.0
+// Generated: January 7, 2026
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// BOOKINGS
+// ============================================================================
+model Booking {
+  // Identity
+  id                   String   @id @default(uuid())
+  confirmationNumber   String   @unique @map("confirmation_number")
+
+  // Customer Information
+  customerName         String   @map("customer_name")
+  phone                String
+  email                String?
+  address              String
+  city                 String?
+  state                String?
+  zipCode              String?  @map("zip_code")
+
+  // Service Details
+  serviceType          ServiceType @map("service_type")
+  issueSummary         String?  @map("issue_summary")
+  symptoms             Json?    // Array of symptom strings
+  urgency              Urgency?
+
+  // Pricing
+  estimatedCostMin     Int?     @map("estimated_cost_min")
+  estimatedCostMax     Int?     @map("estimated_cost_max")
+  promotionCode        String?  @map("promotion_code")
+  discountAmount       Decimal? @map("discount_amount") @db.Decimal(10, 2)
+
+  // Scheduling
+  requestedTimeWindow  String?  @map("requested_time_window")
+  scheduledFor         DateTime? @map("scheduled_for")
+
+  // Service Titan Integration
+  serviceTitanJobId       String? @map("service_titan_job_id")
+  serviceTitanCustomerId  String? @map("service_titan_customer_id")
+  serviceTitanLocationId  String? @map("service_titan_location_id")
+  stSyncStatus            SyncStatus @default(pending) @map("st_sync_status")
+  stSyncError             String? @map("st_sync_error")
+  stSyncAttempts          Int     @default(0) @map("st_sync_attempts")
+  stSyncedAt              DateTime? @map("st_synced_at")
+
+  // Status
+  status               BookingStatus @default(pending)
+
+  // Metadata
+  mcpSessionId         String? @map("mcp_session_id")
+  userAgent            String? @map("user_agent")
+  ipAddress            String? @map("ip_address")
+  metadata             Json?
+
+  // Timestamps
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  syncLogs             SyncLog[]
+
+  @@index([confirmationNumber])
+  @@index([phone])
+  @@index([stSyncStatus])
+  @@index([status])
+  @@index([createdAt(sort: Desc)])
+  @@index([serviceTitanJobId])
+  @@map("bookings")
+}
+
+enum ServiceType {
+  emergency_repair
+  standard_repair
+  installation
+  maintenance
+}
+
+enum Urgency {
+  emergency
+  soon
+  routine
+}
+
+enum SyncStatus {
+  pending
+  syncing
+  synced
+  failed
+  manual
+}
+
+enum BookingStatus {
+  pending
+  confirmed
+  scheduled
+  in_progress
+  completed
+  cancelled
+}
+
+// ============================================================================
+// SERVICE AREAS
+// ============================================================================
+model ServiceArea {
+  // Identity
+  id                Int      @id @default(autoincrement())
+
+  // Location Details
+  name              String
+  type              AreaType
+  state             String
+  zipPrefixes       String[] @map("zip_prefixes")
+
+  // Contact
+  phone             String
+  timezone          String
+
+  // Coordinates (for distance calculations)
+  latitude          Decimal? @db.Decimal(10, 8)
+  longitude         Decimal? @db.Decimal(11, 8)
+
+  // Priority & Status
+  priority          Int      @default(0) // Higher priority wins for overlapping zips
+  isActive          Boolean  @default(true) @map("is_active")
+
+  // Emergency Service
+  emergencyAvailable Boolean @default(true) @map("emergency_available")
+  emergencyHours     String  @default("24/7") @map("emergency_hours")
+
+  // Metadata
+  notes             String?
+  metadata          Json?
+
+  // Timestamps
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([state])
+  @@index([isActive])
+  @@index([priority(sort: Desc)])
+  @@map("service_areas")
+}
+
+enum AreaType {
+  city
+  suburb
+  neighborhood
+  county
+}
+
+// ============================================================================
+// PROMOTIONS
+// ============================================================================
+model Promotion {
+  // Identity
+  id                Int      @id @default(autoincrement())
+  code              String   @unique
+
+  // Details
+  title             String
+  description       String
+
+  // Discount
+  discountType      DiscountType @map("discount_type")
+  discountValue     Decimal @map("discount_value") @db.Decimal(10, 2)
+
+  // Applicability
+  appliesTo         String[] @map("applies_to") // Array of service types
+  minServiceCost    Decimal? @map("min_service_cost") @db.Decimal(10, 2)
+
+  // Validity
+  validFrom         DateTime @map("valid_from")
+  validUntil        DateTime @map("valid_until")
+  isActive          Boolean  @default(true) @map("is_active")
+
+  // Usage Limits
+  maxUses           Int?     @map("max_uses")
+  currentUses       Int      @default(0) @map("current_uses")
+
+  // Display
+  displayPriority   Int      @default(0) @map("display_priority")
+  badgeText         String?  @map("badge_text") // "BEST VALUE", "LIMITED TIME", etc.
+
+  // Metadata
+  notes             String?
+  metadata          Json?
+
+  // Timestamps
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([code])
+  @@index([isActive])
+  @@index([validFrom, validUntil])
+  @@map("promotions")
+}
+
+enum DiscountType {
+  fixed
+  percentage
+}
+
+// ============================================================================
+// SYNC LOGS
+// ============================================================================
+model SyncLog {
+  // Identity
+  id                String   @id @default(uuid())
+  bookingId         String   @map("booking_id")
+
+  // Sync Details
+  syncType          SyncType @map("sync_type")
+  status            SyncLogStatus
+
+  // Request/Response
+  requestPayload    Json?    @map("request_payload")
+  responsePayload   Json?    @map("response_payload")
+  errorMessage      String?  @map("error_message")
+
+  // Timing
+  startedAt         DateTime @default(now()) @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+  durationMs        Int?     @map("duration_ms")
+
+  // Metadata
+  triggeredBy       String?  @map("triggered_by") // User email or 'system'
+  metadata          Json?
+
+  // Relations
+  booking           Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([startedAt(sort: Desc)])
+  @@map("sync_logs")
+}
+
+enum SyncType {
+  manual
+  automatic
+  retry
+}
+
+enum SyncLogStatus {
+  started
+  success
+  failed
+}
+
+// ============================================================================
+// ADMIN USERS
+// ============================================================================
+model AdminUser {
+  // Identity
+  id                String   @id @default(uuid())
+  clerkUserId       String   @unique @map("clerk_user_id")
+
+  // User Info
+  email             String   @unique
+  fullName          String?  @map("full_name")
+
+  // Role
+  role              AdminRole
+
+  // Permissions
+  permissions       Json     @default("[]") // Array of permission strings
+
+  // Status
+  isActive          Boolean  @default(true) @map("is_active")
+  lastLoginAt       DateTime? @map("last_login_at")
+
+  // Timestamps
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([clerkUserId])
+  @@index([email])
+  @@index([isActive])
+  @@map("admin_users")
+}
+
+enum AdminRole {
+  admin
+  dispatcher
+  viewer
+}
