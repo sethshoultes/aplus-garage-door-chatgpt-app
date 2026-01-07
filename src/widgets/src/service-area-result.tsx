@@ -48,20 +48,17 @@ function ServiceAreaResult() {
         // Check what methods are available
         console.log('[Widget] getToolOutput type:', typeof window.openai.getToolOutput);
 
-        // Try different ways to get the data
+        // Get the data from window.openai.toolOutput (property, not function)
         let output;
-        if (typeof window.openai.getToolOutput === 'function') {
-          console.log('[Widget] Calling getToolOutput...');
-          output = await window.openai.getToolOutput();
-        } else if ((window.openai as any).structuredContent) {
-          console.log('[Widget] Using structuredContent directly');
-          output = (window.openai as any).structuredContent;
+        if ((window.openai as any).toolOutput) {
+          console.log('[Widget] Using toolOutput property');
+          output = (window.openai as any).toolOutput;
         } else if ((window as any).__TOOL_OUTPUT__) {
           console.log('[Widget] Using __TOOL_OUTPUT__');
           output = (window as any).__TOOL_OUTPUT__;
         } else {
           console.error('[Widget] No way to get tool output');
-          setError('getToolOutput is not a function. Available: ' + Object.keys(window.openai).join(', '));
+          setError('toolOutput not found. Available: ' + Object.keys(window.openai).join(', '));
           setLoading(false);
           return;
         }

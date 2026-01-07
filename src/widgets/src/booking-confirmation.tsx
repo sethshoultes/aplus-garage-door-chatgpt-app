@@ -38,7 +38,7 @@ function BookingConfirmation() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const output = await window.openai.getToolOutput();
+        const output = (window.openai as any).toolOutput || (window as any).__TOOL_OUTPUT__;
         setData(output);
       } catch (error) {
         console.error('Failed to fetch tool output:', error);
